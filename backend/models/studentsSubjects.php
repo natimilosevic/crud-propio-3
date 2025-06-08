@@ -10,7 +10,7 @@
 */
 
 function assignSubjectToStudent($conn, $student_id, $subject_id, $approved) 
-{
+{   
     $sql = "INSERT INTO students_subjects (student_id, subject_id, approved) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iii", $student_id, $subject_id, $approved);
