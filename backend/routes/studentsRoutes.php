@@ -33,5 +33,28 @@ routeRequest($conn, [
             return;
         }
         handlePost($conn);
+    },
+
+    'DELETE' => function($conn) {
+        $input = json_decode(file_get_contents("php://input"), true); /**recibo datos */
+        $id = $input['id'];
+
+            /**reviso relaciones antes de eliminar */
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM students_subjects WHERE student_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->bind_result($count);
+        $stmt->fetch();
+
+        if ($count > 0) {
+            http_response_code(400);
+            echo json_encode(["error" => "No se puede eliminar el estudiante porque tiene materias asignadas"]);
+            return;
+        }
+
+        handleDelete($conn);
     }
+
+
+
 ]);
